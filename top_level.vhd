@@ -22,6 +22,7 @@ Signal switch_inputs: STD_LOGIC_VECTOR (12 downto 0);
 Signal bcd:           STD_LOGIC_VECTOR(15 DOWNTO 0);
 Signal switch_to_mux: STD_LOGIC_VECTOR(15 downto 0);
 Signal mux_to_ssd  : STD_LOGIC_VECTOR(15 downto 0); 
+Signal sync_to_switch : STD_LOGIC_VECTOR (9 downto 0);
 
 
 Component SevenSegment is
@@ -47,6 +48,14 @@ Component MUX2TO1 is
        mux_out : out std_logic_vector(15 downto 0) -- notice no semi-colon 
       );
 END Component; 
+
+Component synchronizer is 
+port(
+	  A : in std_logic_vector(9 downto 0); 
+	  G : out std_logic_vector(9 downto 0);
+	  clk: in std_logic
+		);
+end Component; 
   
 begin
 	Num_Hex0 <= mux_to_ssd(3 downto 0);
@@ -78,9 +87,9 @@ SevenSegment_ins: SevenSegment
                           );
                                      
  
-LEDR(9 downto 0) <=SW(9 downto 0); -- gives visual display of the switch inputs to the LEDs on board
-switch_inputs <= "00000" & SW(7 downto 0);
-switch_to_mux <= X"00" & sw(7 downto 0);
+LEDR(9 downto 0) <= sync_to_switch; -- gives visual display of the switch inputs to the LEDs on board
+switch_inputs <= "00000" & sync_to_switch(7 downto 0);
+switch_to_mux <= X"00" & sync_to_switch(7 downto 0);
  
 binary_bcd_ins: binary_bcd                               
    PORT MAP(
@@ -93,9 +102,16 @@ MUX2TO1_ins_1: MUX2TO1
    PORT MAP(
       in1     => bcd(15 downto 0),                          
       in2 	  => switch_to_mux(15 downto 0),                                 
-      s => sw(9),    
+      s => sync_to_switch(9),    
       mux_out => mux_to_ssd
       );
+		
+sync : synchronizer
+	PORT MAP(
+	A => sw(9 downto 0), 
+	G => sync_to_switch, 
+	clk => clk 
+	);
 
 end Behavioral;
 
