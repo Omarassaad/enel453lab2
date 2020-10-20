@@ -12,7 +12,7 @@ architecture BEHAVIOR of MUX4TO1 is
 	begin
 		with s select
 			mux_out <= in1 when "00", -- when s is "00" then mux_out becomes in1
-			           in2 when "10",						  
+			           in2 when "10",					  
 						  in3 when "01",
 						  in4 when "11";
 

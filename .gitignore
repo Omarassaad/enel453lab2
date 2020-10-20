@@ -107,3 +107,9 @@ reg0.vhd.bak
 synchronizer.vhd.bak
 top_level.vhd.bak
 top_level.qws
+db/top_level.(6).cnf.cdb
+db/top_level.(6).cnf.hdb
+db/top_level.(7).cnf.cdb
+db/top_level.(7).cnf.hdb
+db/top_level.(8).cnf.cdb
+db/top_level.(8).cnf.hdb
