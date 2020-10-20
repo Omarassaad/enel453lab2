@@ -26,7 +26,7 @@ Signal mux_to_ssd  : STD_LOGIC_VECTOR(15 downto 0);
 Signal save_register_value: STD_LOGIC_VECTOR(15 downto 0); 
 Signal sync_to_switch : STD_LOGIC_VECTOR (9 downto 0);
 Signal save_register_enable: STD_LOGIC;
-Signal MUX4_to_MUX2: STD_LOGIC_VECTOR(15 downto 0);
+
 
 
 Component SevenSegment is
@@ -62,14 +62,7 @@ Component MUX4TO1 is
       );
 END Component; 
 
-Component MUX2TO1 is
-	port(
-		 in1     : in  std_logic_vector(15 downto 0);
-       in2     : in  std_logic_vector(15 downto 0);
-       s       : in  std_logic;
-       mux_out : out std_logic_vector(15 downto 0) -- notice no semi-colon 
-      );
-END Component;
+
 
 Component synchronizer is 
 port(
@@ -134,26 +127,19 @@ Save_Reg_ins: Save_Register
 		clk => clk,
 		enable => save_register_enable,
 		q => save_register_value,
-		d => MUX4_to_MUX2
+		d => mux_to_ssd
 		);
 
-MUX2TO1_ins_1: MUX2TO1
-   PORT MAP(
-      in2     => MUX4_to_MUX2,                      
-      in1 	  => X"5A5A",
-		
-      s => reset_n,
-      mux_out => mux_to_ssd
-      );
+
 		
 MUX4TO1_ins_1: MUX4TO1
    PORT MAP(
       in1     => bcd(15 downto 0),                          
       in2 	  => switch_to_mux(15 downto 0),
 		in3	  => save_register_value,
-		in4	  => save_register_value,
+		in4	  => X"5A5A",
       s => sync_to_switch(9 downto 8),    
-      mux_out => MUX4_to_MUX2
+      mux_out => mux_to_ssd
       );
 		
 sync : synchronizer
