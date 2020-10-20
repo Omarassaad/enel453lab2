@@ -28,6 +28,7 @@ Signal sync_to_switch : STD_LOGIC_VECTOR (9 downto 0);
 Signal save_register_enable: STD_LOGIC;
 
 
+
 Component SevenSegment is
     Port( Num_Hex0,Num_Hex1,Num_Hex2,Num_Hex3,Num_Hex4,Num_Hex5 : in  STD_LOGIC_VECTOR (3 downto 0);
           Hex0,Hex1,Hex2,Hex3,Hex4,Hex5                         : out STD_LOGIC_VECTOR (7 downto 0);
@@ -61,14 +62,7 @@ Component MUX4TO1 is
       );
 END Component; 
 
-Component MUX2TO1 is
-	port(
-		 in1     : in  std_logic_vector(15 downto 0);
-       in2     : in  std_logic_vector(15 downto 0);
-       s       : in  std_logic;
-       mux_out : out std_logic_vector(15 downto 0) -- notice no semi-colon 
-      );
-END Component;
+
 
 Component synchronizer is 
 port(
@@ -135,13 +129,23 @@ Save_Reg_ins: Save_Register
 		q => save_register_value,
 		d => mux_to_ssd
 		);
-		
+
 MUX4TO1_ins_1: MUX4TO1
    PORT MAP(
       in1     => bcd(15 downto 0), -- with s = 00, the output becomes decimal                      
       in2 	  => switch_to_mux(15 downto 0), -- with s = 10, the output becomes hexidecimal
 		in3	  => save_register_value, -- with s = 01, the output becomes the saved value
 		in4	  => X"5A5A", -- with s = 11, the output becomes the hardcoded value
+		);
+
+
+		
+MUX4TO1_ins_1: MUX4TO1
+   PORT MAP(
+      in1     => bcd(15 downto 0),                          
+      in2 	  => switch_to_mux(15 downto 0),
+		in3	  => save_register_value,
+		in4	  => X"5A5A",
       s => sync_to_switch(9 downto 8),    
       mux_out => mux_to_ssd
       );
