@@ -7,6 +7,7 @@ use ieee.numeric_std.all;
 entity top_level is
     Port ( clk                           : in  STD_LOGIC;
            reset_n                       : in  STD_LOGIC;
+			  save_button						  : in  STD_LOGIC;
 			  SW                            : in  STD_LOGIC_VECTOR (9 downto 0);
            LEDR                          : out STD_LOGIC_VECTOR (9 downto 0);
            HEX0,HEX1,HEX2,HEX3,HEX4,HEX5 : out STD_LOGIC_VECTOR (7 downto 0)
@@ -21,8 +22,11 @@ Signal DP_in, Blank:  STD_LOGIC_VECTOR (5 downto 0);
 Signal switch_inputs: STD_LOGIC_VECTOR (12 downto 0);
 Signal bcd:           STD_LOGIC_VECTOR(15 DOWNTO 0);
 Signal switch_to_mux: STD_LOGIC_VECTOR(15 downto 0);
-Signal mux_to_ssd  : STD_LOGIC_VECTOR(15 downto 0); 
+Signal mux_to_ssd  : STD_LOGIC_VECTOR(15 downto 0);
+Signal save_register_value: STD_LOGIC_VECTOR(15 downto 0); 
 Signal sync_to_switch : STD_LOGIC_VECTOR (9 downto 0);
+Signal save_register_enable: STD_LOGIC;
+Signal MUX4_to_MUX2: STD_LOGIC_VECTOR(15 downto 0);
 
 
 Component SevenSegment is
@@ -41,13 +45,31 @@ Component binary_bcd IS
 		);           
 END Component;
 
-Component MUX2TO1 is 
-	port ( in1     : in  std_logic_vector(15 downto 0);
+Component Save_Register is
+	port( 
+		enable: in std_logic;
+		clk : in std_logic; 
+		d : in std_logic_vector (15 downto 0); 
+		q : out std_logic_vector (15 downto 0); 
+		reset_n : in std_logic
+	);
+END Component;
+
+Component MUX4TO1 is 
+	port( in1, in2, in3, in4     : in  std_logic_vector(15 downto 0);	
+       s       : in  std_logic_vector(1 downto 0);
+       mux_out : out std_logic_vector(15 downto 0) -- notice no semi-colon 
+      );
+END Component; 
+
+Component MUX2TO1 is
+	port(
+		 in1     : in  std_logic_vector(15 downto 0);
        in2     : in  std_logic_vector(15 downto 0);
        s       : in  std_logic;
        mux_out : out std_logic_vector(15 downto 0) -- notice no semi-colon 
       );
-END Component; 
+END Component;
 
 Component synchronizer is 
 port(
@@ -56,6 +78,13 @@ port(
 	  clk: in std_logic
 		);
 end Component; 
+
+Component debounce is
+port(  clk     : IN  STD_LOGIC;  --input clock
+    reset_n : IN  STD_LOGIC;  --asynchronous active low reset
+    button  : IN  STD_LOGIC;  --input signal to be debounced
+    result  : OUT STD_LOGIC); --debounced signal
+end Component;
   
 begin
 	Num_Hex0 <= mux_to_ssd(3 downto 0);
@@ -98,12 +127,33 @@ binary_bcd_ins: binary_bcd
       binary   => switch_inputs,    
       bcd      => bcd         
       );
+		
+Save_Reg_ins: Save_Register
+	PORT MAP(
+		reset_n => reset_n,
+		clk => clk,
+		enable => save_register_enable,
+		q => save_register_value,
+		d => MUX4_to_MUX2
+		);
+
 MUX2TO1_ins_1: MUX2TO1
    PORT MAP(
-      in1     => bcd(15 downto 0),                          
-      in2 	  => switch_to_mux(15 downto 0),                                 
-      s => sync_to_switch(9),    
+      in2     => MUX4_to_MUX2,                      
+      in1 	  => X"5A5A",
+		
+      s => reset_n,
       mux_out => mux_to_ssd
+      );
+		
+MUX4TO1_ins_1: MUX4TO1
+   PORT MAP(
+      in1     => bcd(15 downto 0),                          
+      in2 	  => switch_to_mux(15 downto 0),
+		in3	  => save_register_value,
+		in4	  => save_register_value,
+      s => sync_to_switch(9 downto 8),    
+      mux_out => MUX4_to_MUX2
       );
 		
 sync : synchronizer
@@ -112,6 +162,15 @@ sync : synchronizer
 	G => sync_to_switch, 
 	clk => clk 
 	);
+	
+Debounce_ins: debounce
+	PORT MAP(
+	clk  => clk,
+	button => save_button,
+	reset_n => reset_n,
+	result => save_register_enable
+	);
+
 
 end Behavioral;
 
