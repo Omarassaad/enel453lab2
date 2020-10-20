@@ -106,3 +106,4 @@ output_files/top_level.sta.summary
 reg0.vhd.bak
 synchronizer.vhd.bak
 top_level.vhd.bak
+top_level.qws
