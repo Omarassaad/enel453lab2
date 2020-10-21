@@ -371,7 +371,6 @@ set_global_assignment -name SOURCE_FILE top_level.qsf
 set_global_assignment -name VHDL_FILE SevenSegment_decoder.vhd
 set_global_assignment -name VHDL_FILE SevenSegment.vhd
 set_global_assignment -name VHDL_FILE binary_bcd.vhd
-set_global_assignment -name VHDL_FILE MUX2TO1.vhd
 set_global_assignment -name VHDL_FILE synchronizer.vhd
 set_global_assignment -name VHDL_FILE MUX4TO1.vhd
 set_global_assignment -name VHDL_FILE Save_Register.vhd
