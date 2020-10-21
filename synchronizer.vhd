@@ -7,7 +7,7 @@ port(
 	  A : in std_logic_vector(9 downto 0); 
 	  G : out std_logic_vector(9 downto 0);
 	  clk: in std_logic 
-		);
+	);
 end synchronizer; 
 
 architecture behaviour of synchronizer is
