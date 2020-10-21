@@ -130,15 +130,6 @@ Save_Reg_ins: Save_Register
 		d => mux_to_ssd
 		);
 
-MUX4TO1_ins_1: MUX4TO1
-   PORT MAP(
-      in1     => bcd(15 downto 0), -- with s = 00, the output becomes decimal                      
-      in2 	  => switch_to_mux(15 downto 0), -- with s = 10, the output becomes hexidecimal
-		in3	  => save_register_value, -- with s = 01, the output becomes the saved value
-		in4	  => X"5A5A", -- with s = 11, the output becomes the hardcoded value
-		);
-
-
 		
 MUX4TO1_ins_1: MUX4TO1
    PORT MAP(
