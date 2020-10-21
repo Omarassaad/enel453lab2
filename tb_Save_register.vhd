@@ -1,5 +1,6 @@
 library ieee; 
 USE ieee.std_logic_1164.all;
+USE ieee.numeric_std.all;
 
 entity Save_Register is
 end Save_Register;
@@ -15,14 +16,16 @@ port (
 	reset_n : in std_logic
 
 );
-end component
+end component;
 
-constant clk_period : time := 50 ns;
+
+
 signal clk : std_logic; 
 signal enable : std_logic; 
 signal d : std_logic_vector(15 downto 0);
 signal q : std_logic_vector(15 downto 0);
 signal reset : std_logic; 
+constant clk_period : time := 20 ns;
 
 begin 
 
@@ -32,14 +35,14 @@ port map (
 	enable => enable, 
 	d => d, 
 	q => q, 
-	reset => reset_n
+	reset_n => reset
 
 ); 
 
 clk_process: process 
 	begin 
-		clk <= 0; wait for clk_period/2; 
-		clk <= 1; wait for clk_period/2;
+		clk <= '0'; wait for clk_period/2; 
+		clk <= '1'; wait for clk_period/2;
 	end process; 
 	
 input_process: process
