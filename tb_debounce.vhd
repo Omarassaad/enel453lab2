@@ -35,7 +35,7 @@ signal Test_State : StateType; -- this creates a convenient and readable signal 
 signal error : STD_LOGIC := '0'; -- used to flag errors
 
 signal stable_time_tb :  time := 30 ms;
-signal some_delay     :  time := 3 ns;
+signal some_delay     :  time := 200 ns;
 
    -- Clock period definitions
 constant clk_period : time := 20 ns; -- this is a 100 MHz clock
