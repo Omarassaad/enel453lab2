@@ -34,17 +34,17 @@ signal Test_State : StateType; -- this creates a convenient and readable signal 
                                -- simulation, to know where in the testbench you are in the waveform
 signal error : STD_LOGIC := '0'; -- used to flag errors
 
-signal stable_time_tb :  time := 10 ms;
+signal stable_time_tb :  time := 30 ms;
 signal some_delay     :  time := 3 ns;
 
    -- Clock period definitions
-constant clk_period : time := 10 ns; -- this is a 100 MHz clock
+constant clk_period : time := 20 ns; -- this is a 100 MHz clock
 
 begin
   
 debounce1 : debounce
             generic map(clk_freq     => 50_000_000, -- change this value if different from default
-				             stable_time => 10)         -- change this value if different from default
+				             stable_time => 30)         -- change this value if different from default
 				port map(
 				   clk     => clk,
 					button  => button,

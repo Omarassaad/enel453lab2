@@ -36,7 +36,8 @@ architecture tb of tb_top_level is
     signal HEX4        : std_logic_vector (7 downto 0);
     signal HEX5        : std_logic_vector (7 downto 0);
 
-    constant TbPeriod : time := 1000 ns; -- EDIT Put right period here
+    constant TbPeriod : time := 20 ns; -- EDIT Put right period here
+	constant TbDelay : time := 1000*TbPeriod; 
     signal TbClock : std_logic := '0';
     signal TbSimEnded : std_logic := '0';
 
@@ -66,7 +67,8 @@ begin
     begin
  -- EDIT Adapt initialization as needed
         SW <= (others => '0');
-		save_button <= '1'; 
+		
+		
 
         -- Reset generation
         -- EDIT: Check that reset_n is really your reset signal
@@ -74,6 +76,9 @@ begin
         wait for 100 ns;
         reset_n <= '1';
         wait for 100 ns;
+		save_button <= '1';
+		wait for 31 ms; 
+		
 
         -- EDIT Add stimuli here
         wait for 1000 * TbPeriod;
@@ -81,8 +86,8 @@ begin
 		
 		SW <= "0000000001"; wait for 1000 * TbPeriod; -- displaying 1 in decimal
 		SW <= "0011111111";  wait for 1000* TbPeriod; -- displaying 255 in decimal 
-		save_button <= '0'; wait for 1000*TbPeriod;
-		save_button <= '1'; wait for 1000*TbPeriod; -- saved decimal 255
+		save_button <= '0'; wait for 31 ms;
+		save_button <= '1'; wait for 31 ms; -- saved decimal 255
 		SW <= "1001111111"; wait for 1000* TbPeriod; -- displaying hexidecimal 7F
 		SW <= "0101111111"; wait for 1000* TbPeriod; -- diplaying the value that was saved - 255
 		SW <= "1101111111"; wait for 1000* TbPeriod;-- displaying 5A5A
@@ -90,18 +95,18 @@ begin
         reset_n <= '1'; wait for 10*TbPeriod;
 		SW <= "0101111111"; wait for 1000* TbPeriod; -- displaying the saved val, which should be reset
 		SW <= "1011111111"; wait for 1000*TbPeriod; -- displaying FF 
-		save_button <= '0'; wait for 35 ms;
-		save_button <= '1'; wait for 1000*TbPeriod; -- saved FF in hexidecimal
+		save_button <= '0'; wait for 31 ms;
+		save_button <= '1'; wait for 31 ms; -- saved FF in hexidecimal
 		SW <= "0000000011"; wait for 1000*TbPeriod; -- displaying 3 in decimal
 		SW <= "0100000011"; wait for 1000*TbPeriod; -- diplaying the value that was saved - FF
 		SW <= "0000000000"; wait for 1000*TbPeriod; -- displaying 0 
-		save_button <= '0'; wait for 1000*TbPeriod;
-		save_button <= '1'; wait for 1000*TbPeriod; -- saved 0 
+		save_button <= '0'; wait for 31 ms;
+		save_button <= '1'; wait for 31 ms; -- saved 0 
 		SW <= "0011111111";  wait for 1000* TbPeriod; -- displaying 255 in decimal
 		SW <= "0111111111";  wait for 1000* TbPeriod; -- displaying 255 in decimal
 		SW <= "1100000000"; wait for 1000*TbPeriod; -- displaying hardcoded val
-		save_button <= '0'; wait for 1000*TbPeriod;
-		save_button <= '1'; wait for 1000*TbPeriod; -- saved hardcoded val
+		save_button <= '0'; wait for 31 ms;
+		save_button <= '1'; wait for 31 ms; -- saved hardcoded val
 		SW <= "1000001110";  wait for 1000* TbPeriod; -- displaying E in hexidecimal
 		SW <= "0100001110";  wait for 1000* TbPeriod; -- displaying the saved value - hardcoded value
 		
