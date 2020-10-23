@@ -17,5 +17,3 @@ architecture BEHAVIOR of MUX4TO1 is
 					   in4 when others;
 
 end BEHAVIOR; -- can also be written as "end;"
-
-		 

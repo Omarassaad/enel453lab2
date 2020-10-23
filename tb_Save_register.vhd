@@ -2,10 +2,10 @@ library ieee;
 USE ieee.std_logic_1164.all;
 USE ieee.numeric_std.all;
 
-entity Save_Register is
-end Save_Register;
+entity tb_Save_Register is
+end tb_Save_Register;
 
-architecture behaviour of Save_Register is 
+architecture behaviour of tb_Save_Register is 
 
 component Save_Register is 
 port (
@@ -20,12 +20,11 @@ end component;
 
 
 
-signal clk : std_logic; 
-signal enable : std_logic; 
+signal clk, enable, reset: std_logic; 
 signal d : std_logic_vector(15 downto 0);
 signal q : std_logic_vector(15 downto 0);
-signal reset : std_logic; 
-constant clk_period : time := 20 ns;
+constant clk_period : time := 20 ns; 
+
 
 begin 
 
@@ -39,10 +38,19 @@ port map (
 
 ); 
 
-clk_process: process 
+
+clk_process: process is 
+	variable i : integer := 0;
+		
 	begin 
+	
+	while i < 10 loop
 		clk <= '0'; wait for clk_period/2; 
-		clk <= '1'; wait for clk_period/2;
+		clk <= '1'; wait for clk_period/2; 
+		i:= i+1;
+	end loop; 
+	wait; 
+	
 	end process; 
 	
 input_process: process
@@ -67,10 +75,11 @@ save_process: process
 
 reset_process: process 
 	begin 
-		reset <= '1'; wait for 6*clk_period; 
+		reset <= '0'; wait for clk_period;
+		reset <= '1'; wait for 5*clk_period; 
 		reset <= '0'; wait for clk_period; 
 		reset <= '1'; wait for 3*clk_period; 
 		wait; 
-	end process; 
+	end process;
 
 end behaviour; 
