@@ -76,7 +76,7 @@ begin
 		in1 <=  X"AAAA";
         in2 <=  X"FFFF";
         in3 <=  X"921A";
-        in4 <=  X"5A5B";
+        in4 <=  X"5A5A";
         s 	<=  "01"; --We expect Mux to output 1001_0010_0001_1011
 		
 		wait for 100*time_delay;
